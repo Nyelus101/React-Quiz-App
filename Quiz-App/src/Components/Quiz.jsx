@@ -10,12 +10,16 @@ const { score, setScore, setGameState } = useContext(QuizContext);
   const [optionChosen, setOptionChosen] = useState("");
 
 
-  const prevQuestion = () => {
+  /*const prevQuestion = () => {
     if (currQuestion === 0) {
       currQuestion;
     } else (
       setCurrQuestion(currQuestion - 1)
     )
+  };*/
+
+  const prevQuestion = () => {
+      setCurrQuestion(currQuestion - 1)
   };
 
   const nextQuestion = () => {
@@ -43,7 +47,7 @@ const { score, setScore, setGameState } = useContext(QuizContext);
         <button onClick={() => setOptionChosen("D")}> { Questions[currQuestion].optionD } </button>
       </div>
 
-      <button onClick={prevQuestion}>Previous Question</button>  
+      {currQuestion > 0 && <button onClick={prevQuestion}>Previous Question</button>}
       {currQuestion == Questions.length - 1 ? (<button onClick={finishQuiz}>Finish Quiz</button>) : (<button onClick={nextQuestion}> Next Question </button>)}
       
     </div>
