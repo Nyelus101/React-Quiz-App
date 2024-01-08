@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { QuizContext } from '../Helpers/Contexts';
 import { Questions } from '../Helpers/QuestionBank';
+//import TimeUp from './TimeUp';
 
 function Quiz() {
 
@@ -8,6 +9,27 @@ const { score, setScore, setGameState } = useContext(QuizContext);
 
   const [currQuestion, setCurrQuestion] = useState(0);
   const [optionChosen, setOptionChosen] = useState("");
+  const [timer, setTimer] = useState(10);
+
+  const handleTimeUp = () => {
+    alert("Time is up")
+  };
+
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer -1 : 0));
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+ useEffect(() => {
+    //Check if the timer has reached zero
+    if (timer === 0) {
+      finishQuiz();
+      handleTimeUp();
+    }
+  }, [timer]);
 
 
   /*const prevQuestion = () => {
@@ -39,7 +61,9 @@ const { score, setScore, setGameState } = useContext(QuizContext);
 
   return (
     <div className='Quiz'>
-      <h3> {currQuestion + 1} / {Questions.length} </h3>    
+      {/*{timer === 0 && <TimeUp message="Time's up!" />}*/}
+      <h3>Questions answered {currQuestion + 1} / {Questions.length} | Time Remaining: {timer} seconds </h3>
+
       <h1>{Questions[currQuestion].prompt}</h1>
       <div className='options'>
         <button onClick={() => setOptionChosen("A")}> { Questions[currQuestion].optionA } </button>
