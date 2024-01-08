@@ -39,6 +39,7 @@ const { score, setScore, setGameState } = useContext(QuizContext);
 
   return (
     <div className='Quiz'>
+      <h3> {currQuestion + 1} / {Questions.length} </h3>    
       <h1>{Questions[currQuestion].prompt}</h1>
       <div className='options'>
         <button onClick={() => setOptionChosen("A")}> { Questions[currQuestion].optionA } </button>
