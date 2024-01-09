@@ -1,20 +1,37 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { QuizContext } from '../Helpers/Contexts';
-import { Questions } from '../Helpers/QuestionBank';
+//import { Questions } from '../Helpers/QuestionBank';
 //import TimeUp from './TimeUp';
 
 function Quiz() {
 
-const { score, setScore, setGameState } = useContext(QuizContext);
+const { score, setScore, setGameState, questions, setQuestions } = useContext(QuizContext);
 
   const [currQuestion, setCurrQuestion] = useState(0);
   const [optionChosen, setOptionChosen] = useState("");
   const [timer, setTimer] = useState(10);
+  //const [questions, setQuestions] = useState([]);
 
   const handleTimeUp = () => {
     alert("Time is up")
   };
 
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await fetch("https://659c7766633f9aee7907a8f6.mockapi.io/api/Questions"); // Replace with your actual API endpoint
+        const data = await response.json();
+        console.log(data);
+        setQuestions(data);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -45,14 +62,14 @@ const { score, setScore, setGameState } = useContext(QuizContext);
   };
 
   const nextQuestion = () => {
-    if (Questions[currQuestion].answer == optionChosen) {
+    if (questions[currQuestion].answer == optionChosen) {
       setScore(score + 1);
     }
     setCurrQuestion(currQuestion + 1);
   };
 
   const finishQuiz = () => {
-    if (Questions[currQuestion].answer == optionChosen) {
+    if (questions[currQuestion].answer == optionChosen) {
       setScore(score + 1);
     }
     setGameState("endScreen");
@@ -62,18 +79,23 @@ const { score, setScore, setGameState } = useContext(QuizContext);
   return (
     <div className='Quiz'>
       {/*{timer === 0 && <TimeUp message="Time's up!" />}*/}
-      <h3>Questions answered {currQuestion + 1} / {Questions.length} | Time Remaining: {timer} seconds </h3>
+      <h3>Questions answered {currQuestion + 1} / {questions.length} | Time Remaining: {timer} seconds </h3>
 
-      <h1>{Questions[currQuestion].prompt}</h1>
+      {questions.length > 0 && (
+        <>
+        <h1>{questions[currQuestion].prompt}</h1>
       <div className='options'>
-        <button onClick={() => setOptionChosen("A")}> { Questions[currQuestion].optionA } </button>
-        <button onClick={() => setOptionChosen("B")}> { Questions[currQuestion].optionB } </button>
-        <button onClick={() => setOptionChosen("C")}> { Questions[currQuestion].optionC } </button>
-        <button onClick={() => setOptionChosen("D")}> { Questions[currQuestion].optionD } </button>
+        <button onClick={() => setOptionChosen("A")}> { questions[currQuestion].optionA } </button>
+        <button onClick={() => setOptionChosen("B")}> { questions[currQuestion].optionB } </button>
+        <button onClick={() => setOptionChosen("C")}> { questions[currQuestion].optionC } </button>
+        <button onClick={() => setOptionChosen("D")}> { questions[currQuestion].optionD } </button>
       </div>
 
       {currQuestion > 0 && <button onClick={prevQuestion}>Previous Question</button>}
-      {currQuestion == Questions.length - 1 ? (<button onClick={finishQuiz}>Finish Quiz</button>) : (<button onClick={nextQuestion}> Next Question </button>)}
+      {currQuestion == questions.length - 1 ? (<button onClick={finishQuiz}>Finish Quiz</button>) : (<button onClick={nextQuestion}> Next Question </button>)}
+        
+        </>
+      )}
       
     </div>
   );
