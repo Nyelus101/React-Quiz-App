@@ -21,7 +21,6 @@ const { score, setScore, setGameState, questions, setQuestions } = useContext(Qu
       try {
         const response = await fetch("https://659c7766633f9aee7907a8f6.mockapi.io/api/Questions"); // Replace with your actual API endpoint
         const data = await response.json();
-        console.log(data);
         setQuestions(data);
       } catch (error) {
         console.error('Error fetching questions:', error);
