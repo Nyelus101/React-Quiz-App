@@ -78,10 +78,10 @@ const { score, setScore, setGameState, questions, setQuestions } = useContext(Qu
   return (
     <div className='Quiz'>
       {/*{timer === 0 && <TimeUp message="Time's up!" />}*/}
-      <h3>Questions answered {currQuestion + 1} / {questions.length} | Time Remaining: {timer} seconds </h3>
-
+      
       {questions.length > 0 && (
         <>
+        <h3>Questions answered {currQuestion + 1} / {questions.length} | Time Remaining: {timer} seconds </h3>
         <h1>{questions[currQuestion].prompt}</h1>
       <div className='options'>
         <button onClick={() => setOptionChosen("A")}> { questions[currQuestion].optionA } </button>
