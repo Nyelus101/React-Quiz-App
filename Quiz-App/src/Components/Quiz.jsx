@@ -1,19 +1,21 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { QuizContext } from '../Helpers/Contexts';
+//import QuizTimer from './QuizTimer';
 //import { Questions } from '../Helpers/QuestionBank';
 //import TimeUp from './TimeUp';
+//import AnswerTimer from './AnswerTimer';
 
 function Quiz() {
 
-const { score, setScore, setGameState, questions, setQuestions } = useContext(QuizContext);
+const { score, setScore, setGameState, questions, setQuestions, useTimer, setUseTimer, timer, setTimer, counter, setCounter } = useContext(QuizContext);
 
   const [currQuestion, setCurrQuestion] = useState(0);
   const [optionChosen, setOptionChosen] = useState("");
-  const [timer, setTimer] = useState(10);
-  //const [questions, setQuestions] = useState([]);
+  //const [timer, setTimer] = useState(20);
+  //const [useTimer, setUseTimer] = useState(true);
 
   const handleTimeUp = () => {
-    alert("Time is up")
+    alert("Time is up");
   };
 
   useEffect(() => {
@@ -22,6 +24,7 @@ const { score, setScore, setGameState, questions, setQuestions } = useContext(Qu
         const response = await fetch("https://659c7766633f9aee7907a8f6.mockapi.io/api/Questions"); // Replace with your actual API endpoint
         const data = await response.json();
         setQuestions(data);
+        console.log(data);
       } catch (error) {
         console.error('Error fetching questions:', error);
       }
@@ -33,19 +36,22 @@ const { score, setScore, setGameState, questions, setQuestions } = useContext(Qu
   
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer -1 : 0));
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+
+    if (useTimer) {
+      const intervalId = setInterval(() => {
+        setTimer((prevTimer) => (prevTimer > 0 ? prevTimer -1 : 0));
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [useTimer]);
 
  useEffect(() => {
     //Check if the timer has reached zero
-    if (timer === 0) {
+    if (useTimer && timer === 0) {
       finishQuiz();
       handleTimeUp();
     }
-  }, [timer]);
+  }, [useTimer, timer]);
 
 
   /*const prevQuestion = () => {
@@ -61,26 +67,35 @@ const { score, setScore, setGameState, questions, setQuestions } = useContext(Qu
   };
 
   const nextQuestion = () => {
-    if (questions[currQuestion].answer == optionChosen) {
+    if (questions[currQuestion].answer === optionChosen) {
       setScore(score + 1);
     }
     setCurrQuestion(currQuestion + 1);
+    //setOptionChosen to empty string else the previous option will be passed down if nothing is selected
+    setOptionChosen("");
+    //console.log(optionChosen);
   };
 
   const finishQuiz = () => {
-    if (questions[currQuestion].answer == optionChosen) {
+    if (questions[currQuestion].answer === optionChosen) {
       setScore(score + 1);
     }
+    //console.log(optionChosen);
     setGameState("endScreen");
   };
 
+  /*const handleTimeUp2 = () => {
+    nextQuestion();
+    setCounter(0);
+  }*/
 
   return (
     <div className='Quiz'>
       {/*{timer === 0 && <TimeUp message="Time's up!" />}*/}
-      
+
       {questions.length > 0 && (
         <>
+        {/*<AnswerTimer duration={10} onTimeUp={handleTimeUp2} />*/}
         <h3>Questions answered {currQuestion + 1} / {questions.length} | Time Remaining: {timer} seconds </h3>
         <h1>{questions[currQuestion].prompt}</h1>
       <div className='options'>
@@ -92,7 +107,11 @@ const { score, setScore, setGameState, questions, setQuestions } = useContext(Qu
 
       {currQuestion > 0 && <button onClick={prevQuestion}>Previous Question</button>}
       {currQuestion == questions.length - 1 ? (<button onClick={finishQuiz}>Finish Quiz</button>) : (<button onClick={nextQuestion}> Next Question </button>)}
-        
+
+      {/*<label>
+        Use Quiz Timer:
+        <input type="checkbox" checked={useTimer} onChange={() => setUseTimer(!useTimer)} />
+      </label>*/}
         </>
       )}
       
@@ -100,4 +119,4 @@ const { score, setScore, setGameState, questions, setQuestions } = useContext(Qu
   );
 }
 
-export default Quiz
+export default Quiz;
