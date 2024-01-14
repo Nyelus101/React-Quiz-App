@@ -64,6 +64,7 @@ const { score, setScore, setGameState, questions, setQuestions, useTimer, setUse
 
   const prevQuestion = () => {
       setCurrQuestion(currQuestion - 1)
+      //setCounter(0);//from answertimer
   };
 
   const nextQuestion = () => {
@@ -74,6 +75,7 @@ const { score, setScore, setGameState, questions, setQuestions, useTimer, setUse
     //setOptionChosen to empty string else the previous option will be passed down if nothing is selected
     setOptionChosen("");
     //console.log(optionChosen);
+    //setCounter(0);//from answertimer
   };
 
   const finishQuiz = () => {
@@ -95,7 +97,7 @@ const { score, setScore, setGameState, questions, setQuestions, useTimer, setUse
 
       {questions.length > 0 && (
         <>
-        {/*<AnswerTimer duration={10} onTimeUp={handleTimeUp2} />*/}
+        {/*{currQuestion < questions.length - 1 ? <AnswerTimer duration={5} onTimeUp={handleTimeUp2} /> : finishQuiz()}*/}
         <h3>Questions answered {currQuestion + 1} / {questions.length} | Time Remaining: {timer} seconds </h3>
         <h1>{questions[currQuestion].prompt}</h1>
       <div className='options'>
