@@ -82,6 +82,14 @@ const { score, setScore, setGameState, questions, setQuestions, useTimer, setUse
     if (questions[currQuestion].answer === optionChosen) {
       setScore(score + 1);
     }
+    // Save the score and timestamp in localStorage
+    const timestamp = new Date().toLocaleString();
+    const newScore = { score: score, timestamp: timestamp };
+    const existingScores = JSON.parse(localStorage.getItem('quizScores')) || [];
+    const updatedScores = [...existingScores, newScore];
+    localStorage.setItem('quizScores', JSON.stringify(updatedScores));
+
+
     //console.log(optionChosen);
     setGameState("endScreen");
   };
