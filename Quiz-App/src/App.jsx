@@ -4,6 +4,8 @@ import Quiz from './Components/Quiz';
 import EndScreen from './Components/EndScreen';
 import './App.css'
 import { QuizContext } from './Helpers/Contexts';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter } from "react-router-dom"
 
 function App() {
   const [gameState, setGameState] = useState("menu");
